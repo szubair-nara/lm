@@ -8,7 +8,7 @@ import logging
 logging.basicConfig(filename='lstmrun.log',level=logging.DEBUG)
 
 text = []
-with open('text8', 'r') as f:
+with open('data/text8', 'r') as f:
     text = f.read().split()
 
 word_freq = Counter(text)
@@ -59,8 +59,8 @@ for e in range(10):
           epoch_loss += np.sum(ls)
           c += len(ls)
           if i % ((128+10)*128) == 0:
-              logging.debug("EPOCH: " + str(e), float(i)/float(len(train_in)))
-              logging.debug(epoch_loss/float(c))
+              logging.debug("EPOCH: " + str(e) + " " + str(float(i)/float(len(train_in))))
+              logging.debug(str(epoch_loss/float(c)))
     perp, testloss = test_loss()
     loggin.debug("PERPLEXITY: " + str(perp))
     loggin.debug("LOSS: " + str(loss))
