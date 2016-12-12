@@ -10,14 +10,14 @@ with open('data/text8', 'r') as f:
     text = f.read().split()
 
 word_freq = Counter(text)
-unique_tokens = word_freq.most_common(500)
+unique_tokens = word_freq.most_common(50000)
 word_index = {unique_tokens[i][0]: i for i in range(len(unique_tokens))}
 word_index["<UNK>"] = max(word_index.values()) + 1
 
 batch_size = 128
 n_steps = 10
-n_hidden = 32
-embedding_dim = 32
+n_hidden = 512
+embedding_dim = 512
 learning_rate = 0.2
 n_classes = len(word_index)
 
@@ -29,7 +29,7 @@ model = concat.ConcatNext(batch_size=batch_size,
                           learning_rate=learning_rate,
                           num_layers=4,
                           embeddings=None,
-                          gpu_device="0",
+                          gpu_device="1",
                           n_to_sample=100,
                           full_softmax=False,
                           activation='relu')
