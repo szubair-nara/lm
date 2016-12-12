@@ -22,15 +22,16 @@ def test_loss(num_samples=None):
         num_samples = len(test_in)
     for i in xrange(0, num_samples, 128+10):
         test_grams = np.array([list(x) for x in find_ngrams(test_in[i:i+128+10], 11)], dtype=np.int32)
-        X_in = test_grams[:, :10].reshape(10, 128, 1)
-        Y_in = test_grams[:, 10].reshape(128, 1)
-        fd = {}
-        for j in range(len(model.X)):
-            fd[model.X[j]] = X_in[j]
-        fd[model.Y] = Y_in
-        l = np.sum(model.sess.run(model.full_softmax_loss, feed_dict=fd))
-        loss += l
-        count += 128
+        if len(test_grams) == 128:
+            X_in = test_grams[:, :10].reshape(10, 128, 1)
+            Y_in = test_grams[:, 10].reshape(128, 1)
+            fd = {}
+            for j in range(len(model.X)):
+                fd[model.X[j]] = X_in[j]
+            fd[model.Y] = Y_in
+            l = np.sum(model.sess.run(model.full_softmax_loss, feed_dict=fd))
+            loss += l
+            count += 128
     return np.exp(loss/float(count)), loss/(float(count))
 
 def find_ngrams(input_list, n):

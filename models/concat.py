@@ -79,20 +79,11 @@ class ConcatNext():
             self.to_s, self.tw, self.ww = tf.nn.learned_unigram_candidate_sampler(self.Y, 1, n_to_sample, False,
                                                                                   self.n_classes, seed=None,
                                                                                   name=None)
-            self.loss = tf.nn.sampled_softmax_loss(tf.transpose(self.output_weights),
-                                                   self.output_biases, self.hidden_states[-1], self.Y, n_to_sample,
-                                                   self.n_classes, num_true=1,
-                                                   sampled_values=(self.to_s, self.tw, self.ww),
-                                                   remove_accidental_hits=True,
-                                                   partition_strategy='mod',
-                                                   name='sampled_softmax_loss')
+
             self.full_softmax_loss = nn_ops.sparse_softmax_cross_entropy_with_logits(self.output_state,
                                                                                      tf.reshape(self.Y,
                                                                                      [self.batch_size]))
-            if self.full_softmax:
-                self.cost = tf.reduce_mean(self.full_softmax_loss)
-            else:
-                self.cost = tf.reduce_mean(self.loss)
+            self.cost = tf.reduce_mean(self.full_softmax_loss)
 
             self.optimizer = tf.train.AdagradOptimizer(learning_rate=self.learning_rate).minimize(self.cost)
 
